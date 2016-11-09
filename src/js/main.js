@@ -221,21 +221,6 @@ var ist = (function() {
             $(document).trigger('scroll-changed');
         });
 
-        // expanding latex expressions
-        var latex = $('.md-expression');
-        latex.each(function(index, element) {
-            var code = $(element).text();
-            if (code.startsWith('{$'))
-                code = code.substring(2);
-
-            if (code.endsWith('$}'))
-                code = code.substring(0, code.length - 2);
-
-            katex.render(code, element, {
-                displayMode: false
-            });
-        });
-
 
         // mobile support
         $('.tree-list').append('<div id="navigation-mobile">' +
@@ -269,6 +254,19 @@ var ist = (function() {
                 return ot >= st && (ot) <= (st + wh);
             };
         })(jQuery);
+        
+        // expanding latex expressions
+        var latex = $('.md-expression');
+        latex.each(function(index, element) {
+            var code = $(element).text().trim();
+            // remove {} and $
+            code = code.substring(1, code.length -1).trim();
+            code = code.startsWith('$') ? code.substring(1, code.length -1).trim() : code;
+
+            katex.render(code, element, {
+                displayMode: false
+            });
+        });
 
         $(document).trigger('hashchange');
         $(document).trigger('dimension-changed');
