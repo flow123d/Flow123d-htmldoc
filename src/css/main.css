@@ -23,7 +23,7 @@ h1 {
   margin-left: 0;
 }
 
-.record:before, .abstract-record:before, .selection:before {
+.record:before, .abstract-record:before, .selection:before, .tuple:before {
   display: inline-block;
   position: relative;
   width: 150px;
@@ -36,6 +36,10 @@ h1 {
 
 .record:before {
   content: "RECORD";
+}
+
+.tuple:before {
+  content: "TUPLE";
 }
 
 .abstract-record:before {
@@ -170,6 +174,10 @@ body h3 {
   margin-right: 10px;
 }
 
+/*
+  RECORD
+ */
+
 #input-reference .record {
   background: #D0E0EF;
 }
@@ -181,6 +189,52 @@ body h3 {
 #input-reference .record a:hover {
   color: #23527c;
 }
+
+a.btn.btn-warning.btn-filter.active:before {
+  background-color: #005098;
+}
+
+section.main-section.record div.obsolete {
+    /*background-color: #2D4C69;*/
+    border-color: #2088E8;
+}
+
+/*
+  TUPLE
+ */
+
+#input-reference .tuple {
+  background: #eee0cf;
+}
+
+#input-reference .tuple h3, #input-reference .tuple a {
+  color: #b87733;
+}
+
+#input-reference .tuple a:hover {
+  color: #7c4d23;
+}
+
+a.btn.btn-tuple.btn-filter.active:before {
+  background-color: #984000;
+}
+
+a.btn.btn-tuple {
+  background-color: #f2c1a1;
+  border-color: #b93d00;
+  color: #333;
+}
+
+a.btn.btn-tuple:focus, a.btn.btn-tuple:hover {
+  background-color: #e7a277;
+  color: #000;
+}
+
+
+
+/*
+  ABSTRACT
+ */
 
 #input-reference .abstract-record {
   background: #E1F2DF;
@@ -194,6 +248,19 @@ body h3 {
   color: #276F1F;
 }
 
+a.btn.btn-success.btn-filter.active:before {
+  background-color: #0f9a00;
+}
+
+section.main-section.abstract-record div.obsolete {
+    /*background-color: #216719;*/
+    border-color: #2FB71F;
+}
+
+/*
+  SELECTION
+ */
+
 #input-reference .selection {
   background: #F0DCF2;
 }
@@ -205,6 +272,16 @@ body h3 {
 #input-reference .selection a:hover {
   color: #7B2384;
 }
+
+a.btn.btn-info.btn-filter.active:before {
+  background-color: #ca00dd;
+}
+
+section.main-section.selection div.obsolete {
+    /*background-color: #522758;*/
+    border-color: #8D00A0;
+}
+
 
 .abstract-record em {
   padding-left: 10px;
@@ -260,17 +337,8 @@ a.btn.btn-filter.active:before {
   border-radius: 1px;
 }
 
-a.btn.btn-warning.btn-filter.active:before {
-  background-color: #005098;
-}
 
-a.btn.btn-success.btn-filter.active:before {
-  background-color: #0f9a00;
-}
 
-a.btn.btn-info.btn-filter.active:before {
-  background-color: #ca00dd;
-}
 
 body .search-wrapper {
   float: right;
@@ -416,21 +484,6 @@ section div.obsolete {
     border-left: 10px solid;
     background-color: #FFF;
     color: #000;
-}
-
-section.main-section.selection div.obsolete {
-    /*background-color: #522758;*/
-    border-color: #8D00A0;
-}
-
-section.main-section.record div.obsolete {
-    /*background-color: #2D4C69;*/
-    border-color: #2088E8;
-}
-
-section.main-section.abstract-record div.obsolete {
-    /*background-color: #216719;*/
-    border-color: #2FB71F;
 }
 
 .tab-pane a.active {
