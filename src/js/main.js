@@ -1,282 +1,177 @@
-var ist = (function() {
-    var __debug__ = false;
-    var scrollspy_href = null;
+$(document).ready(function() {
+    var eqs = $('.md-expression');
+    eqs.each(function(index, item) {
+        var $item = $(item);
+        var text = $item.text();
+        text = text.substring(1, text.length - 1).trim();
+        if (text.charAt(0) == "$")
+            text = text.substring(1, text.length - 1).trim();
+        katex.render(text, item);
+    });
+
+    var $navigation = $('.navigation');
+    var root = '#Root';
+    var $root = $(root);
+    var $toggles = $('.toggle-btn');
+    var $nav = $('#nav');
+    var didScroll = false;
+    var lastScroll = $(document).scrollTop();
     
-    function isFilterOneMode() {
-        // if no such element exists return always true
-        var $btn = $('#btn-filter-one');
-        return $btn.length ? $btn.is(':checked') : true;
-    };
-
-    function getVisibleElements() {
-        return $('#input-reference>.main-section:visible');
-    };
-
-    function getHiddenElements() {
-        return $('#input-reference>.main-section:hidden');
+    $( window ).scroll(function() {
+        var tmp = $(document).scrollTop();
+        var down = tmp > lastScroll;
+        lastScroll = tmp;
+        
+        if (tmp > 64) {
+            $nav.addClass('small');
+        } else {
+                $nav.removeClass('small');
+        }
+        
+        if (down) {
+            if (tmp > 64) {
+                $nav.addClass('down');
+            }
+        } else {
+            $nav.removeClass('down');
+        }
+        
+        fixSidebar();
+    });
+    
+    var fixSidebar = function () {
+        var tmp = $(document).scrollTop();
+        if(tmp < 220) {
+            $navigation.css('top', 220 - tmp);
+        } else {
+            $navigation.css('top', 0);
+        }
     };
     
-    function getActiveElement() {
-        if ($(window).scrollTop() <= 50)
-            return null;
-        
-        var elements = getVisibleElements();
-        var $element = null;
-        elements.each(function(index, element) {
-            if ($(element).startInView()) {
-                $element = $(element);
-                return false;
-            }
-        });
-        return $element;
+    var isSingleMode = function () {
+        return !$toggles.hasClass('active');
     };
-
-    function disableBtnGroup(state) {
-        if (state)
-            $('.filter-btns a').hide();
-        else
-            $('.filter-btns a').show();
+    
+    var setHash = function(value) {
+        window.location.hash = value;
+        // $(window).trigger('hashchange');
     };
-
-    function getGroupStates() {
-        var result = {
-            'visible': [],
-            'hidden': []
-        };
-        $(".btn-filter").each(function(index, element) {
-            $(element).hasClass('active') ? result['visible'].push($(element).data('type')) : result['hidden'].push($(element).data('type'))
-        });
-
-        return result;
+    
+    var getHash = function(full) {
+        if(full)
+            return window.location.hash;
+        return trim(window.location.hash);
     };
-
-    function getURLElement() {
-        if (!window.location.hash)
-            return null;
-
-        var hash = window.location.hash;
-        return $(hash).hasClass('main-section') ? $(hash) : null;
+    
+    var trim = function(value) {
+        if(value && value.indexOf(':') != -1)
+            return value.substr(0, value.indexOf(':'));
+        return value;
     };
-
-    $(window).on('hashchange', function(e) {
-        if (__debug__) console.log('hashchange');
-        var urlElement = getURLElement();
-        if (isFilterOneMode()) {
-            if (urlElement) {
-                getVisibleElements().addClass('hidden');
-                urlElement.removeClass('hidden');
-            }
-        } else {
-            // we need to make sure that focused element which are
-            // hidden will still be focused
-            if (urlElement)
-                urlElement.removeClass('hidden');
+    
+    var secure = function(value) {
+        if(value)
+            return value.replace(':', '\\:');
+        return value;
+    };
+    
+    
+    var getActive = function () {
+        var elemID = getHash();
+        if (elemID) {
+            var $elem = $(elemID);
+            if ($elem.hasClass('main-section'))
+                return $elem;
         }
-
-        if (urlElement)
-            setTimeout(function() {
-                $(document.body).scrollTop(urlElement.offset().top);
-            }, 1);
-    });
-
-    $(document).on('mode-changed', function() {
-        if (__debug__) console.log('mode-changed');
-        var singleMode = isFilterOneMode();
-        disableBtnGroup(singleMode);
-        if (singleMode) {
-            
-            if (scrollspy_href) {
-                scrollspy_href.removeClass('active');
-                scrollspy_href = null;
-            }
-            
-            $visible = getVisibleElements();
-            var urlElement = getURLElement();
-
-            if ($visible.length == 0) {
-                if (urlElement) {
-                    urlElement.removeClass('hidden');
-                } else {
-                    $hidden = getHiddenElements();
-                    $hidden.first().removeClass('hidden');
-                }
-            }
-
-            if ($visible.length > 1) {
-                $visible.addClass('hidden');
-                if (urlElement) {
-                    urlElement.removeClass('hidden');
-                } else {
-                    $visible.first().removeClass('hidden');
-                }
-            }
-        } else {
-            $(document).trigger('filter-changed');
-        }
-    });
-
-    $(document).on('filter-changed', function() {
-        if (__debug__) console.log('filter-changed');
-        var groupStates = getGroupStates();
-        if (groupStates['visible'].length == 0) {
-            $(".btn-filter").first().addClass('active');
-            groupStates = getGroupStates();
-        }
-
-        groupStates['visible'].forEach(function(element, index) {
-            $('#input-reference>.' + element).removeClass('hidden');
-        });
-        groupStates['hidden'].forEach(function(element, index) {
-            $('#input-reference>.' + element).addClass('hidden');
-        });
-    });
-
-    $(document).on('scroll-changed', function() {
-        if (__debug__) console.log('scroll-changed');
-        if ($(window).scrollTop() > $('#input-reference').offset().top) {
-            $('#top-link-block').css('left', $('#input-reference').width() + $('#input-reference').offset().left);
-            $('#top-link-block').show();
-        } else {
-            $('#top-link-block').hide();
-        }
-        var parentTop = $('.tree-list').parent().offset().top;
-        var bodyScroll = $(document.body).scrollTop();
-        $('.tree-list').css({
-            'top': Math.max(bodyScroll - parentTop, 0) + 'px'
-        });
-        
-        // scrollspy works only with tree ordered items
-        // and only in multiple mode
-        if (!isFilterOneMode()) {
-            var $tv = $('#tree-view')
-            if ($tv.hasClass('active')) {
-                var perc = $(window).scrollTop()/$(document).height();
-                var scroll = perc * $tv[0].scrollHeight;
-                var hei = $tv.height();
-                scroll = Math.max(scroll - hei/2, 0);
-                $tv.scrollTop(scroll);
-            }
-        }
-        
-        var active = getActiveElement();
-        if (active && active != scrollspy_href) {
-            if (scrollspy_href) {
-                scrollspy_href.removeClass('active');
-                scrollspy_href = null;
-            }
-            scrollspy_href = $('.active .item_'+active.attr('id'))
-            scrollspy_href.addClass('active');
-            // location.hash = 'item-'+active.attr('id');
-        }
-    });
-
-    $(document).on('dimension-changed', function() {
-        if (__debug__) console.log('dimension-changed');
-        $('.tab-pane').css({
-            'max-height': ($(window).height() - $('.nav-tabs').height() - 50) + 'px',
-            'overflow': 'auto',
-        });
-        
-        $(document).trigger('scroll-changed');
-    });
-
-    $(function() {
-        $(document).trigger('mode-changed');
-
-        $('.btn-filter').click(function() {
-            $(this).toggleClass('active');
-            $(document).trigger('filter-changed');
-        });
-
-        $('#btn-filter-one').change(function() {
-            $(document).trigger('mode-changed');
-        });
-
-
-        $('.nav-tabs a').click(function() {
-            var element = $(this).attr('aria-controls');
-            $('.tab-content .tab-pane').removeClass('active');
-            $('#' + element).addClass('active');
-        });
-
-        $('#search').on('input', function() {
-            var search = $('#search').val().trim().toLowerCase();
-            if (!search)
-                return $('.tab-content li').show();
-
-            $('.tab-content li').each(function(index, element) {
-                var $element = $(element);
-                if ($element.data('name').trim().toLowerCase().indexOf(search) == -1)
-                    $element.hide();
-                else
-                    $element.show();
-            });
-        });
-
-        // hand over resizing and scrolling
-        $(window).resize(function() {
-            $(document).trigger('dimension-changed');
-        });
-        $(window).scroll(function() {
-            $(document).trigger('scroll-changed');
-        });
-
-
-        // mobile support
-        $('.tree-list').append('<div id="navigation-mobile">' +
-            '<select id="navigation-mobile-select"></select>' +
-            '</div>');
-        var $mobileSelect = $('#navigation-mobile-select');
-        $('#abc-view li').each(function(index, element) {
-            var option = document.createElement("option");
-            option.text = $(element).data('name');
-            option.value = $(element).find('a').attr('href');
-            $mobileSelect.append(option);
-        });
-        $mobileSelect.change(function(e) {
-            window.location.hash = $mobileSelect.val()
-        });
-
-        // in view plugin
-        (function($) {
-            $.fn.inView = function() {
-                var st = (document.documentElement.scrollTop || document.body.scrollTop),
-                    ot = $(this).offset().top,
-                    wh = (window.innerHeight && window.innerHeight < $(window).height()) ? window.innerHeight : $(window).height();
-
-                return ot > st && ($(this).height() + ot) < (st + wh);
-            };
-            $.fn.startInView = function() {
-                var st = (document.documentElement.scrollTop || document.body.scrollTop),
-                    ot = $(this).offset().top,
-                    wh = (window.innerHeight && window.innerHeight < $(window).height()) ? window.innerHeight : $(window).height();
-
-                return ot >= st && (ot) <= (st + wh);
-            };
-        })(jQuery);
-        
-        // expanding latex expressions
-        var latex = $('.md-expression');
-        latex.each(function(index, element) {
-            var code = $(element).text().trim();
-            // remove {} and $
-            code = code.substring(1, code.length -1).trim();
-            code = code.startsWith('$') ? code.substring(1, code.length -1).trim() : code;
-
-            katex.render(code, element, {
-                displayMode: false
-            });
-        });
-
-        $(document).trigger('hashchange');
-        $(document).trigger('dimension-changed');
-    });
-    return {
-        isFilterOneMode: isFilterOneMode,
-        getVisibleElements: getVisibleElements,
-        getHiddenElements: getHiddenElements,
-        getURLElement: getURLElement,
-        getGroupStates: getGroupStates,
-        getActiveElement: getActiveElement,
+        return null;
+    };
+    
+    var getActiveField = function() {
+        var elemID = getHash(true);
+        if (!elemID) return null;
+        if (elemID.indexOf(':') == -1) return null;
+        return $(secure(elemID));
     }
-}());
+    
+    var showSingle = function($elem) {
+        $('.main-section').addClass('hidden');
+        $elem.removeClass('hidden');
+    };
+    
+    var updateView = function() {
+        singleMode = isSingleMode();
+        var $active = getActive();
+        
+        if($active) {
+            $navigation.find('li').removeClass('active');
+            var selector = getHash().replace('#', '.item_');
+            $navigation.find(selector).parent().addClass('active');
+        }
+        
+        if(singleMode) {
+            if (!$active) {
+                showSingle($root);
+                return;
+            }
+            showSingle($active);
+        } else {
+            if ($active) {
+                $active.removeClass('hidden');
+            }
+        }
+    };
+    
+    $toggles.click(function() {
+        var $this = $(this);
+        var $family = $($this.data('family'))
+        var isActive = $family.hasClass('active');
+        
+        $family.toggleClass('active');
+        var filter = $family.data('filter');
+        if($family.hasClass('active')) {
+            $(filter).removeClass('hidden');
+        } else {
+            $(filter).addClass('hidden');
+        }
+        
+        updateView();
+        return false;
+    });
+    
+    $(window).bind('hashchange', function(e) {
+        updateView();
+    });
+    
+    $(window).resize(function() {
+        fixSidebar();
+    });
+    
+    $('a[href^="#"]').click(function(e) {
+        var href = this.getAttribute("href");
+        if (href == '#')
+            return true;
+        
+        var $href = $(trim(href));
+        if (isSingleMode()) {
+            showSingle($href);
+            setHash(href);
+            $(window).scrollTop(0);
+            return false;
+        } else {
+            $href.removeClass('hidden');
+            setHash(href);
+            return false;
+        }
+    });
+    
+    $('.show-root').click(function(e) {
+        $toggles.removeClass('active');
+        setHash(root);
+        updateView();
+        return false;
+    });
+    
+    updateView();
+    fixSidebar();
+    $('.button-collapse').sideNav();
+});

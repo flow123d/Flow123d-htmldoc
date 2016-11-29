@@ -1,0 +1,25 @@
+.menu-links .r {background-color: rgba(32, 92, 171, 0.6);}
+.menu-links .t {background-color: rgba(161, 96, 14, 0.6);}
+.menu-links .a {background-color: rgba(147, 27, 167, 0.6);}
+.menu-links .s {background-color: rgba(47, 144, 27, 0.6);}
+
+.menu-links .r .active {background-color: #205cab; border-bottom: 5px solid #1a3c69;}
+.menu-links .t .active {background-color: #c67e22; border-bottom: 5px solid #624724;}
+.menu-links .a .active {background-color: #931ba7; border-bottom: 5px solid #4d1557;}
+.menu-links .s .active {background-color: #2f901b; border-bottom: 5px solid #1f5314;}
+
+.main-section.r h3, .main-section.r h2 a:hover, .main-section.r a {color: #205cab;}
+.main-section.t h3, .main-section.t h2 a:hover, .main-section.t a {color: #c67e22;}
+.main-section.a h3, .main-section.a h2 a:hover, .main-section.a a {color: #931ba7;}
+.main-section.s h3, .main-section.s h2 a:hover, .main-section.s a {color: #2f901b;}
+
+.nav-bar.r li.active, .main-section.r {background-color: #cfdfee;}
+.nav-bar.t li.active, .main-section.t {background-color: #eee2cf;}
+.nav-bar.a li.active, .main-section.a {background-color: #eecfee;}
+.nav-bar.s li.active, .main-section.s {background-color: #d5eecf;}
+
+
+.main-section.r:before {content: "RECORD";}
+.main-section.t:before {content: "TUPLE";}
+.main-section.a:before {content: "ABSTRACT RECORD";}
+.main-section.s:before {content: "SELECTION";}
