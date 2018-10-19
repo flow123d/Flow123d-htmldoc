@@ -1,0 +1,152 @@
+---
+---
+
+@import "colors";
+@import "layout";
+
+body {
+  background: #DEDEDE;
+}
+
+$section-lighten-amount: 45%;
+$section-before-lighten-amount: 40%;
+$section-h2-darken-amount: 20%;
+$section-h2-hover-darken-amount: 10%;
+$section-code-hover-darken-amount: 20%;
+
+.generated {
+  color: #666;
+}
+
+.menu {
+  .r {
+    .emph {
+      background: $record-color !important;
+    }
+    li a, h3 {
+      color: $record-color;
+    }
+  }
+  .a {
+    .emph {
+      background: $abstract-color !important;
+    }
+    li a, h3 {
+      color: $abstract-color;
+    }
+  }
+  .s {
+    .emph {
+      background: $selection-color !important;
+    }
+    li a, h3 {
+      color: darken($selection-color, 10%);
+    }
+  }
+  .t {
+    .emph {
+      background: $tuple-color !important;
+    }
+    li a, h3 {
+      color: $tuple-color;
+    }
+  }
+}
+
+section.r {
+  background: lighten($record-color, $section-lighten-amount);
+  
+  code {
+    color: darken($record-color, $section-code-hover-darken-amount);
+  }
+  
+  &::before {
+    content: "RECORD";
+    background: lighten($record-color, $section-before-lighten-amount);
+  }
+  header h2 a:hover {
+    color: darken($record-color, $section-h2-darken-amount);
+  }
+  .item-header a h3, a {
+    color: darken($record-color, $section-h2-darken-amount);
+    &:hover {
+      color: darken($record-color, $section-h2-hover-darken-amount);
+    }
+  }
+}
+
+section.a {
+  background: lighten($abstract-color, $section-lighten-amount);
+  
+  code {
+    color: darken($abstract-color, $section-code-hover-darken-amount);
+  }
+  &::before {
+    content: "ABSTRACT RECORD";
+    background: lighten($abstract-color, $section-before-lighten-amount);
+  }
+  header h2 a:hover {
+    color: darken($abstract-color, $section-h2-darken-amount);
+  }
+  .item-header > h3, a {
+    color: darken($abstract-color, $section-h2-darken-amount);
+    &:hover {
+      color: darken($abstract-color, $section-h2-hover-darken-amount);
+    }
+  }
+}
+
+section.s {
+  background: lighten($selection-color, $section-lighten-amount);
+  
+  code {
+    color: darken($selection-color, $section-code-hover-darken-amount);
+  }
+  &::before {
+    content: "SELECTION";
+    background: lighten($selection-color, $section-before-lighten-amount);
+  }
+  header h2 a:hover {
+    color: darken($selection-color, $section-h2-darken-amount);
+  }
+  .item-header > a > h3, a {
+    color: darken($selection-color, $section-h2-darken-amount);
+    &:hover {
+      color: darken($selection-color, $section-h2-hover-darken-amount);
+    }
+  }
+}
+
+section.t {
+  background: lighten($tuple-color, $section-lighten-amount);
+  
+  code {
+    color: darken($tuple-color, $section-code-hover-darken-amount);
+  }
+  &::before {
+    content: "TUPLE";
+    background: lighten($tuple-color, $section-before-lighten-amount);
+  }
+  header h2 a:hover {
+    color: darken($tuple-color, $section-h2-darken-amount);
+  }
+  .item-header > h3, a {
+    color: darken($tuple-color, $section-h2-darken-amount);
+    &:hover {
+      color: darken($tuple-color, $section-h2-hover-darken-amount);
+    }
+  }
+}
+
+.robot {
+  font-family: monospace;
+}
+.description, .info {
+  color: #000;
+}
+.item-header > .info, .info .info {
+    color: #333;
+    opacity: 0.9;
+    font-size: 0.9em;
+    line-height: 0.9;
+}
