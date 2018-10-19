@@ -1,0 +1,18 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "removeComments": true,
+    },
+    "include": [
+        "**/*",
+    ],
+    "files": [
+        "/home/jan-hybs/typings/modules/angular/index.d.ts",
+        "/home/jan-hybs/typings/globals/jquery/index.d.ts",
+        "main.ts",
+    ],
+    "lib": [
+        "es6",
+        "dom"
+    ],
+}
